@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using WeatherBots.DataAccess;
 
 namespace WeatherBots
 {
@@ -11,10 +12,14 @@ namespace WeatherBots
             //create a publisher for configs
             //create a bot factory?
             //call weatherbotService?
+
             //create validation factory
+            var validationFactory = new ValidationStructureRetrieverFactory();
             //create a reader factory 
-            //pass to reader service
+            var retrieverFactory = new WeatherDataRetrieverFactory<string>();
             //prompt for weatherdata
+            //pass to reader service
+
             //use publisher to update bots
         }
     }
