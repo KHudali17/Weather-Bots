@@ -8,7 +8,7 @@ namespace WeatherBots.DataAccess
 {
     public class WeatherDataRetrieverFactory<T>
     {
-        public IWeatherDataRetriever GetWeatherDataRetriever(T source, ValidationStructureRetrieverFactory validationFactory)
+        public IWeatherDataRetriever GetWeatherDataRetriever(T source)
         {
             SupportedSourcesEnum? sourceType = null;
             
@@ -21,15 +21,13 @@ namespace WeatherBots.DataAccess
                 Console.WriteLine(ex);
             }
 
-            IValidationStructureRetriever validation = validationFactory.GetValidationRetriever(sourceType);
-
             switch (sourceType)
             {
                 case SupportedSourcesEnum.JSON:
-                    return new WeatherDataRetrieverJson( (source as string)!, validation);
+                    return new WeatherDataRetrieverJson( (source as string)! );
 
                 case SupportedSourcesEnum.XML:
-                    return new WeatherDataRetrieverXml( (source as string)!, validation);
+                    return new WeatherDataRetrieverXml( (source as string)! );
 
                 default:
                     /*

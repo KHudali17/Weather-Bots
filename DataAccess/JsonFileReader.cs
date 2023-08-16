@@ -11,7 +11,8 @@ namespace WeatherBots.DataAccess
     {
         internal static async Task<T> ReadJsonFileAsync<T>(string fileName)
         {
-            using FileStream stream = File.OpenRead(fileName);
+            using FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, 
+                                                     FileShare.Read, bufferSize: 4096, useAsync: true);
 
             var options = new JsonSerializerOptions
             {

@@ -1,25 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
+using WeatherBots.DataRecords;
 
 namespace WeatherBots.DataAccess
 {
     public class WeatherDataRetrieverXml : IWeatherDataRetriever
     {
         private string _source;
-        private IValidationStructureRetriever _validation;
 
-        public WeatherDataRetrieverXml(string source, IValidationStructureRetriever validation)
+        public WeatherDataRetrieverXml(string source)
         {
             _source = source;
-            _validation = validation;
         }
 
-        public Task<IWeatherData> GetWeatherData()
+        public async Task<IWeatherData> GetWeatherData()
         {
-            throw new NotImplementedException();
+            var weatherDataDeserialized = await XmlFileReader.ReadXmlFileAsync<WeatherData>(_source);
+
+            if (!IsValidWeatherData(weatherDataDeserialized)) throw new XmlSchemaException();
+
+            return weatherDataDeserialized;
+        }
+
+        private bool IsValidWeatherData(WeatherData weatherDataDeserialized)
+        {
+            PropertyInfo[] WeatherDataProperties = typeof(WeatherData).GetProperties();
+
+            return WeatherDataProperties
+                   .Select(property => property.GetValue(weatherDataDeserialized))
+                   .All(property => property != null);
         }
     }
 }

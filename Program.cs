@@ -9,18 +9,18 @@ namespace WeatherBots
         {
             //read config file
             string configFileName = "testConfigs.json";
-            var config = await ConfigRetrieverJson.GetConfigFromJson(configFileName);
-            Console.WriteLine(config);
+            DataRecords.BotConfig config = await ConfigRetrieverJson.GetConfigFromJson(configFileName);
+
             //create a publisher for weather data
             //create a publisher for configs
             //create a bot factory?
             //call weatherbotService?
 
-            //create validation factory
-            var validationFactory = new ValidationStructureRetrieverFactory();
 
             //create a reader factory 
-            var retrieverFactory = new WeatherDataRetrieverFactory<string>();
+            WeatherDataRetrieverFactory<string> retrieverFactory = new WeatherDataRetrieverFactory<string>();
+
+            
 
             //prompt for weatherdata
             //pass to reader service
