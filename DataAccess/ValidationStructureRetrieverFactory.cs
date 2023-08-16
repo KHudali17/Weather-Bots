@@ -9,11 +9,9 @@
         {
             string currentDirectory = Directory.GetCurrentDirectory();
 
-            string pathToJsonValidation = Path.Combine(currentDirectory, "JSON_validation.json");
 
             string pathToXmlValidation = Path.Combine(currentDirectory, "XML_validation.xml");
 
-            _typeToValidationFilePathDict.Add(SupportedSourcesEnum.JSON,  pathToJsonValidation);
             _typeToValidationFilePathDict.Add(SupportedSourcesEnum.XML, pathToXmlValidation);
             
         }
@@ -22,9 +20,6 @@
         {
             switch (sourceType)
             {
-                case SupportedSourcesEnum.JSON:
-                    return new ValidationStructureRetrieverJson(_typeToValidationFilePathDict[SupportedSourcesEnum.JSON]);
-
                 case SupportedSourcesEnum.XML:
                     return new ValidationStructureRetrieverXml(_typeToValidationFilePathDict[SupportedSourcesEnum.XML]);
 

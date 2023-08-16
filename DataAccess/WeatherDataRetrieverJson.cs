@@ -8,7 +8,7 @@ namespace WeatherBots.DataAccess
 {
     public class WeatherDataRetrieverJson : IWeatherDataRetriever
     {
-        private string _source;
+        private readonly string _source;
         private IValidationStructureRetriever _validation;
 
         public WeatherDataRetrieverJson(string source, IValidationStructureRetriever validation)
