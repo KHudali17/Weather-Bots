@@ -9,20 +9,20 @@ namespace WeatherBots.ObserversAndPublishers
 {
     public class WeatherDataPublisher : IPublisher<IWeatherData>
     {
-        private IEnumerable<IPublisherObserver<IWeatherData>> _observers;
+        private List<IPublisherObserver<IWeatherData>> _observers = new();
+
         public bool AddObserver(IPublisherObserver<IWeatherData> observer)
         {
-            throw new NotImplementedException();
+            _observers.Add(observer);
+            return true;
         }
 
-        public bool Observers(IWeatherData data)
+        public bool NotifyObservers(IWeatherData data)
         {
-            throw new NotImplementedException();
+            _observers.ForEach(observer => observer.Update(data));
+            return true;
         }
 
-        public bool RemoveObserver(IPublisherObserver<IWeatherData> observer)
-        {
-            throw new NotImplementedException();
-        }
+        public bool RemoveObserver(IPublisherObserver<IWeatherData> observer) => _observers.Remove(observer);
     }
 }

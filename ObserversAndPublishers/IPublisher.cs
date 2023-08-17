@@ -12,6 +12,6 @@ namespace WeatherBots.ObserversAndPublishers
 
         bool RemoveObserver(IPublisherObserver<T> observer);
 
-        bool Observers(T data);
+        bool NotifyObservers(T data);
     }
 }

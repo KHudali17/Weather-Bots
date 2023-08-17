@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using WeatherBots.DataAccess;
+using WeatherBots.ObserversAndPublishers;
 
 namespace WeatherBots
 {
@@ -7,12 +8,12 @@ namespace WeatherBots
     {
         static async Task Main(string[] args)
         {
-            //read config file
             string configFileName = "testConfigs.json";
             DataRecords.BotConfig config = await ConfigRetrieverJson.GetConfigFromJson(configFileName);
 
-            //create a publisher for weather data
-            //create a publisher for configs
+            var weatherDataPublisher = new WeatherDataPublisher();
+            var configDataPublisher = new ConfigDataPublisher();
+
             //create a bot factory?
             //call weatherbotService?
 
