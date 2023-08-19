@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeatherBots.DataRecords
 {
-    public record BotConfig : IConfigData
+    public record BotConfig
     {
         public required BotSettings SunBot { get; init; }
         public required BotSettings RainBot { get; init; }

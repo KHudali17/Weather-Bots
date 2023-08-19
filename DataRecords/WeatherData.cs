@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace WeatherBots
 {
     [XmlRoot("WeatherData")]
-    public record WeatherData : IWeatherData
+    public record WeatherData
     {
         [XmlElement("Location", IsNullable = true)]
         public required string? Location { get; init; }

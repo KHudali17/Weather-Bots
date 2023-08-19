@@ -21,21 +21,16 @@ namespace WeatherBots.DataAccess
                 Console.WriteLine(ex);
             }
 
-            switch (sourceType)
+            return sourceType switch
             {
-                case SupportedSourcesEnum.JSON:
-                    return new WeatherDataRetrieverJson( (source as string)! );
-
-                case SupportedSourcesEnum.XML:
-                    return new WeatherDataRetrieverXml( (source as string)! );
-
-                default:
+                SupportedSourcesEnum.JSON => new WeatherDataRetrieverJson((source as string)!),
+                SupportedSourcesEnum.XML => new WeatherDataRetrieverXml((source as string)!),
+                _ => throw new NotImplementedException(),
                     /*
                      * Case when a new source is added to enum but factory
                      * is not yet updated; otherwise unreachable.
                      */
-                    throw new NotImplementedException();
-            }
+            };
         }
     }
 }

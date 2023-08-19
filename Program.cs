@@ -11,22 +11,19 @@ namespace WeatherBots
             string configFileName = "testConfigs.json";
             DataRecords.BotConfig config = await ConfigRetrieverJson.GetConfigFromJson(configFileName);
 
-            var weatherDataPublisher = new WeatherDataPublisher();
-            var configDataPublisher = new ConfigDataPublisher();
+            var weatherDataPublisher = new Publisher<WeatherData>();
 
-            //create a bot factory?
-            //call weatherbotService?
+            var weatherBotService = new DynamicWeatherBotService(config, weatherDataPublisher);
 
-
-            //create a reader factory 
             WeatherDataRetrieverFactory<string> retrieverFactory = new WeatherDataRetrieverFactory<string>();
 
-            
-
             //prompt for weatherdata
-            //pass to reader service
+            string pathToWeatherData = "";
+            var retriever = retrieverFactory.GetWeatherDataRetriever(pathToWeatherData);
 
-            //use publisher to update bots
+            WeatherData inputData = await retriever.GetWeatherData();
+
+            weatherDataPublisher.NotifyObservers(inputData);
         }
     }
 }

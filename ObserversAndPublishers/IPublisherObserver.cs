@@ -2,6 +2,6 @@
 {
     public interface IPublisherObserver<T>
     {
-        Task Update(T data);
+        Task<bool> Update(T data);
     }
 }

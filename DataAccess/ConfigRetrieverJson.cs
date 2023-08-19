@@ -9,7 +9,7 @@ using WeatherBots.DataRecords;
 
 namespace WeatherBots.DataAccess
 {
-    public class ConfigRetrieverJson : IConfigDataRetriever
+    public class ConfigRetrieverJson
     {
         public static async Task<BotConfig> GetConfigFromJson(string fileName)
         {

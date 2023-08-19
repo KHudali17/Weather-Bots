@@ -9,6 +9,6 @@ namespace WeatherBots.DataAccess
 {
     public interface IWeatherDataRetriever
     {
-        Task<IWeatherData> GetWeatherData();
+        Task<WeatherData> GetWeatherData();
     }
 }

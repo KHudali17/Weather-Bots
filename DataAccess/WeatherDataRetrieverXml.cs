@@ -18,7 +18,7 @@ namespace WeatherBots.DataAccess
             _source = source;
         }
 
-        public async Task<IWeatherData> GetWeatherData()
+        public async Task<WeatherData> GetWeatherData()
         {
             var weatherDataDeserialized = await XmlFileReader.ReadXmlFileAsync<WeatherData>(_source);
 
