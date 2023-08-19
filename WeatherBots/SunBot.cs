@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WeatherBots.DataRecords;
 
 namespace WeatherBots.WeatherBots
 {
-    public class SunBot : IDynamicWeatherBot
+    public class SunBot : DynamicWeatherBot
     {
-        public Task ExecuteBotAction()
-        {
-            throw new NotImplementedException();
-        }
+        public SunBot(BotSettings settings, WeatherData? data = null) : base(settings, data) { }
 
-        public Task Update(IWeatherData data)
+        public override async Task<bool> ExecuteBotAction()
         {
-            throw new NotImplementedException();
-        }
+            if (_data == null) throw new DataUnavailableException();
+            if (_settings.TemperatureThreshold == null) return false;
+            if (_settings.TemperatureThreshold >= _data.Temperature) return false;
 
-        public Task Update(IConfigData data)
-        {
-            throw new NotImplementedException();
+            await Console.Out.WriteLineAsync("SunBot activated");
+            await Console.Out.WriteLineAsync(_settings.Message);
+
+            return true;
         }
     }
 }

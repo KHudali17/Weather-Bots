@@ -9,6 +9,6 @@ namespace WeatherBots.WeatherBots
 {
     public interface IWeatherBot 
     {
-        Task ExecuteBotAction();
+        Task<bool> ExecuteBotAction();
     }
 }

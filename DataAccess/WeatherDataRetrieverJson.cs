@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using WeatherBots.DataRecords;
 
 namespace WeatherBots.DataAccess
 {
     public class WeatherDataRetrieverJson : IWeatherDataRetriever
     {
-        public Task<IWeatherData> GetWeatherData()
+        private readonly string _source;
+
+        public WeatherDataRetrieverJson(string source)
         {
-            throw new NotImplementedException();
+            _source = source;
+        }
+
+        public async Task<WeatherData> GetWeatherData()
+        {
+            var weatherDataDeserialized = await JsonFileReader.ReadJsonFileAsync<WeatherData>(_source);
+            return weatherDataDeserialized;
         }
     }
 }

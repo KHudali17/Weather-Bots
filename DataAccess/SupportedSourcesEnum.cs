@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace WeatherBots.DataAccess
 {
-    public interface IConfigDataRetriever
+    public enum SupportedSourcesEnum
     {
+        JSON,
+        XML
     }
 }

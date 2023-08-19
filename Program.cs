@@ -1,21 +1,29 @@
 ﻿using System.Runtime.InteropServices;
-
+using WeatherBots.DataAccess;
+using WeatherBots.ObserversAndPublishers;
+using WeatherBots.DataRecords;
 namespace WeatherBots
 {
     public class Program
     {
-        static void Main(string[] args)
+        private const string FilePathPromptMessage = "Enter filepath to weather data: ";
+        private const string ConfigFileName = "Configs.json";
+        static async Task Main(string[] args)
         {
-            //read config file
-            //create a publisher for weather data
-            //create a publisher for configs
-            //create a bot factory?
-            //call weatherbotService?
-            //create validation factory
-            //create a reader factory 
-            //pass to reader service
-            //prompt for weatherdata
-            //use publisher to update bots
+            var config = await ConfigRetrieverJson.GetConfigFromJson(ConfigFileName);
+
+            var weatherDataPublisher = new Publisher<WeatherData>();
+
+            var weatherBotService = new DynamicWeatherBotService(config, weatherDataPublisher);
+
+            var retrieverFactory = new WeatherDataRetrieverFactory<string>();
+
+            var pathToWeatherData = await Prompt.PromptFilePathAsync(FilePathPromptMessage);
+            var retriever = retrieverFactory.GetWeatherDataRetriever(pathToWeatherData);
+
+            var inputData = await retriever.GetWeatherData();
+
+            weatherDataPublisher.NotifyObservers(inputData);
         }
     }
 }

@@ -8,9 +8,29 @@ namespace WeatherBots.DataAccess
 {
     public class WeatherDataRetrieverFactory<T>
     {
-        public static IWeatherDataRetriever GetWeatherDataRetriever(T source)
+        public IWeatherDataRetriever GetWeatherDataRetriever(T source)
         {
-            throw new NotImplementedException();
+            SupportedSourcesEnum? sourceType = null;
+            
+            try
+            {
+                sourceType = DataRetrievalUtility.getSourceType(source);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            return sourceType switch
+            {
+                SupportedSourcesEnum.JSON => new WeatherDataRetrieverJson((source as string)!),
+                SupportedSourcesEnum.XML => new WeatherDataRetrieverXml((source as string)!),
+                _ => throw new NotImplementedException(),
+                    /*
+                     * Case when a new source is added to enum but factory
+                     * is not yet updated; otherwise unreachable.
+                     */
+            };
         }
     }
 }
