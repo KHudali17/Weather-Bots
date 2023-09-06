@@ -1,6 +1,7 @@
 ﻿using WeatherBots.DataAccess;
 using WeatherBots.DataRecords;
 using WeatherBots.ObserversAndPublishers;
+using WeatherBots.Prompts;
 using WeatherBots.Seams;
 using WeatherBots.WeatherBots;
 
@@ -26,7 +27,10 @@ public class Program
 
         var retrieverFactory = new WeatherDataRetrieverFactory<string>();
 
-        var pathToWeatherData = await Prompt.PromptFilePathAsync(FilePathPromptMessage);
+        var fileWrapper = new FileWrapper();
+        var prompter = new Prompter(consoleWrapper, fileWrapper);
+        var pathToWeatherData = await prompter.PromptFilePathAsync(FilePathPromptMessage);
+
         var retriever = retrieverFactory.GetWeatherDataRetriever(pathToWeatherData);
 
         var inputData = await retriever.GetWeatherData();
