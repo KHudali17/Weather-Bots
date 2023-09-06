@@ -1,7 +1,6 @@
-﻿namespace WeatherBots.ObserversAndPublishers
+﻿namespace WeatherBots.ObserversAndPublishers;
+
+public interface IPublisherObserver<T>
 {
-    public interface IPublisherObserver<T>
-    {
-        Task<bool> Update(T data);
-    }
+    Task<bool> Update(T data);
 }
