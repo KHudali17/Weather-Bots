@@ -1,29 +1,36 @@
-﻿using System.Runtime.InteropServices;
-using WeatherBots.DataAccess;
-using WeatherBots.ObserversAndPublishers;
+﻿using WeatherBots.DataAccess;
 using WeatherBots.DataRecords;
-namespace WeatherBots
+using WeatherBots.ObserversAndPublishers;
+using WeatherBots.Seams;
+using WeatherBots.WeatherBots;
+
+namespace WeatherBots;
+
+public class Program
 {
-    public class Program
+    private const string FilePathPromptMessage = "Enter filepath to weather data: ";
+    private const string ConfigFileName = "Configs.json";
+    static async Task Main(string[] args)
     {
-        private const string FilePathPromptMessage = "Enter filepath to weather data: ";
-        private const string ConfigFileName = "Configs.json";
-        static async Task Main(string[] args)
-        {
-            var config = await ConfigRetrieverJson.GetConfigFromJson(ConfigFileName);
+        var config = await ConfigRetrieverJson.GetConfigFromJson(ConfigFileName);
 
-            var weatherDataPublisher = new Publisher<WeatherData>();
+        var weatherDataPublisher = new Publisher<WeatherData>();
 
-            var weatherBotService = new DynamicWeatherBotService(config, weatherDataPublisher);
+        var consoleWrapper = new ConsoleWrapper();
 
-            var retrieverFactory = new WeatherDataRetrieverFactory<string>();
+        var weatherBotFactory = new WeatherBotFactory(config, consoleWrapper);
 
-            var pathToWeatherData = await Prompt.PromptFilePathAsync(FilePathPromptMessage);
-            var retriever = retrieverFactory.GetWeatherDataRetriever(pathToWeatherData);
+        var weatherBotService = new DynamicWeatherBotService(weatherBotFactory);
+        weatherBotService.InstantiateBots();
+        weatherBotService.AddBotsToPublisher(weatherDataPublisher);
 
-            var inputData = await retriever.GetWeatherData();
+        var retrieverFactory = new WeatherDataRetrieverFactory<string>();
 
-            weatherDataPublisher.NotifyObservers(inputData);
-        }
+        var pathToWeatherData = await Prompt.PromptFilePathAsync(FilePathPromptMessage);
+        var retriever = retrieverFactory.GetWeatherDataRetriever(pathToWeatherData);
+
+        var inputData = await retriever.GetWeatherData();
+
+        weatherDataPublisher.NotifyObservers(inputData);
     }
 }

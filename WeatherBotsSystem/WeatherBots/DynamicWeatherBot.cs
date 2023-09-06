@@ -1,31 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
-using WeatherBots.DataRecords;
+﻿using WeatherBots.DataRecords;
 using WeatherBots.ObserversAndPublishers;
+using WeatherBots.Seams;
 
-namespace WeatherBots.WeatherBots
+namespace WeatherBots.WeatherBots;
+
+public abstract class DynamicWeatherBot : IWeatherBot, IPublisherObserver<WeatherData>
 {
-    public abstract class DynamicWeatherBot : IWeatherBot, IPublisherObserver<WeatherData>
+    protected BotSettings _settings;
+    protected WeatherData? _data;
+    protected IConsoleWrapper _consoleWrapper;
+
+    public DynamicWeatherBot(
+        BotSettings settings,
+        IConsoleWrapper consoleWrapper,
+        WeatherData? data = null
+        )
     {
-        protected BotSettings _settings;
-        protected WeatherData? _data;
+        _settings = settings;
+        _data = data;
+        _consoleWrapper = consoleWrapper;
+    }
 
-        public DynamicWeatherBot(BotSettings settings, WeatherData? data = null)
-        {
-            _settings = settings;
-            _data = data;
-        }
+    public abstract Task<bool> ExecuteBotAction();
 
-        public abstract Task<bool> ExecuteBotAction();
-
-        public virtual Task<bool> Update(WeatherData data)
-        {
-            _data = data;
-            return ExecuteBotAction();
-        }
+    public virtual Task<bool> Update(WeatherData data)
+    {
+        _data = data;
+        return ExecuteBotAction();
     }
 }
+

@@ -1,26 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeatherBots.DataRecords;
+﻿using WeatherBots.DataRecords;
+using WeatherBots.Seams;
 
-namespace WeatherBots.WeatherBots
+namespace WeatherBots.WeatherBots;
+
+public class RainBot : DynamicWeatherBot
 {
-    public class RainBot : DynamicWeatherBot
+    public RainBot(BotSettings settings,
+        IConsoleWrapper consoleWrapper,
+        WeatherData? data = null) : base(settings, consoleWrapper, data) { }
+
+    public override async Task<bool> ExecuteBotAction()
     {
-        public RainBot(BotSettings settings, WeatherData? data = null) : base(settings, data) { }
+        if (_data == null) throw new DataUnavailableException();
+        if (_settings.HumidityThreshold == null) return false;
+        if (_settings.HumidityThreshold >= _data.Humidity) return false;
 
-        public override async Task<bool> ExecuteBotAction()
-        {
-            if (_data == null) throw new DataUnavailableException();
-            if (_settings.HumidityThreshold == null) return false;
-            if (_settings.HumidityThreshold >= _data.Humidity) return false;
+        await _consoleWrapper.WriteLineAsync("RainBot activated");
+        await _consoleWrapper.WriteLineAsync(_settings.Message);
 
-            await Console.Out.WriteLineAsync("RainBot activated");
-            await Console.Out.WriteLineAsync(_settings.Message);
-
-            return true;
-        }
+        return true;
     }
 }
+

@@ -1,43 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeatherBots.DataRecords;
+﻿using WeatherBots.DataRecords;
 using WeatherBots.ObserversAndPublishers;
+using WeatherBots.Seams;
 using WeatherBots.WeatherBots;
 
-namespace WeatherBots
+namespace WeatherBots;
+
+public class DynamicWeatherBotService
 {
-    public class DynamicWeatherBotService
+    private List<DynamicWeatherBot> _dynamicWeatherBots = new();
+    private readonly IWeatherBotFactory _weatherBotFactory;
+
+    public DynamicWeatherBotService(IWeatherBotFactory weatherBotFactory)
     {
-        private List<DynamicWeatherBot> _dynamicWeatherBots = new();
+        _weatherBotFactory = weatherBotFactory;
+    }
 
-        public DynamicWeatherBotService(BotConfig configs, Publisher<WeatherData> weatherPublisher) 
+    public void InstantiateBots()
+    {
+        _dynamicWeatherBots = new List<DynamicWeatherBot>
         {
-            instantiateBotsFromConfig(configs);
-            AddToPublisher(weatherPublisher);
+            _weatherBotFactory.CreateSnowBot()!,
+            _weatherBotFactory.CreateSunBot()!,
+            _weatherBotFactory.CreateRainBot()!
         }
+        .Where(bot => bot != null)
+        .ToList();
+    }
 
-        private void instantiateBotsFromConfig(BotConfig configs)
-        {
-            var configPropertyToBotMapping = new Dictionary<BotSettings, DynamicWeatherBot>()
-            {
-                { configs.SunBot, new SunBot(configs.SunBot) },
-                { configs.RainBot, new RainBot(configs.RainBot) },
-                { configs.SnowBot, new SnowBot(configs.SnowBot) }
-            };
-
-            _dynamicWeatherBots = configPropertyToBotMapping
-                                  .Where(kv => kv.Key.Enabled)
-                                  .Select(kv => kv.Value)
-                                  .ToList();
-        }
-
-        private bool AddToPublisher<T>(Publisher<T> publisher)
-        {
-            _dynamicWeatherBots.ForEach(bot => publisher.AddObserver((IPublisherObserver<T>)bot));
-            return true;
-        }
+    public bool AddBotsToPublisher<T>(Publisher<T> publisher)
+    {
+        _dynamicWeatherBots.ForEach(bot => publisher.AddObserver((IPublisherObserver<T>)bot));
+        return true;
     }
 }
+
