@@ -1,25 +1,24 @@
-﻿namespace WeatherBots.DataAccess
+﻿namespace WeatherBots.DataAccess;
+
+public class DataRetrievalUtility
 {
-    internal class DataRetrievalUtility
+    public static SupportedSourcesEnum GetSourceType<T>(T source)
     {
-        internal static SupportedSourcesEnum getSourceType<T>(T source)
+        if (source is string)
         {
-            if ( source is string )
-            {
-                return getSupportedTypeFromString( (source as string)! );
-            }
-
-            throw new UnsupportedDataFormatException();
+            return GetSupportedTypeFromString((source as string)!);
         }
 
-        private static SupportedSourcesEnum getSupportedTypeFromString(string source)
-        {
-            
-            if ( source.EndsWith(".xml") ) return SupportedSourcesEnum.XML;
+        throw new UnsupportedDataFormatException();
+    }
 
-            if ( source.EndsWith(".json") ) return SupportedSourcesEnum.JSON;
+    private static SupportedSourcesEnum GetSupportedTypeFromString(string source)
+    {
 
-            throw new UnsupportedDataFormatException();
-        }
+        if (source.EndsWith(".xml")) return SupportedSourcesEnum.XML;
+
+        if (source.EndsWith(".json")) return SupportedSourcesEnum.JSON;
+
+        throw new UnsupportedDataFormatException();
     }
 }

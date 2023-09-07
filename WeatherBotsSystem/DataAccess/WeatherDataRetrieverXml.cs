@@ -1,39 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using System.Xml.Schema;
 using WeatherBots.DataRecords;
+using WeatherBots.Seams;
 
-namespace WeatherBots.DataAccess
+namespace WeatherBots.DataAccess;
+
+public class WeatherDataRetrieverXml : IWeatherDataRetriever
 {
-    public class WeatherDataRetrieverXml : IWeatherDataRetriever
+    private readonly string _source;
+    private readonly IFileStreamWrapper _fileStreamWrapper;
+
+    public WeatherDataRetrieverXml(string source, IFileStreamWrapper fileStreamWrapper)
     {
-        private string _source;
+        _source = source;
+        _fileStreamWrapper = fileStreamWrapper;
+    }
 
-        public WeatherDataRetrieverXml(string source)
-        {
-            _source = source;
-        }
+    public async Task<WeatherData> GetWeatherData()
+    {
+        var weatherDataDeserialized = await XmlFileReader.ReadXmlFileAsync<WeatherData>(
+            _fileStreamWrapper.GetAsyncStream(_source));
 
-        public async Task<WeatherData> GetWeatherData()
-        {
-            var weatherDataDeserialized = await XmlFileReader.ReadXmlFileAsync<WeatherData>(_source);
+        if (!IsValidWeatherData(weatherDataDeserialized)) throw new XmlSchemaException();
 
-            if (!IsValidWeatherData(weatherDataDeserialized)) throw new XmlSchemaException();
+        return weatherDataDeserialized;
+    }
 
-            return weatherDataDeserialized;
-        }
+    private static bool IsValidWeatherData(WeatherData weatherDataDeserialized)
+    {
+        PropertyInfo[] WeatherDataProperties = typeof(WeatherData).GetProperties();
 
-        private bool IsValidWeatherData(WeatherData weatherDataDeserialized)
-        {
-            PropertyInfo[] WeatherDataProperties = typeof(WeatherData).GetProperties();
-
-            return WeatherDataProperties
-                   .Select(property => property.GetValue(weatherDataDeserialized))
-                   .All(property => property != null);
-        }
+        return WeatherDataProperties
+               .Select(property => property.GetValue(weatherDataDeserialized))
+               .All(property => property != null);
     }
 }

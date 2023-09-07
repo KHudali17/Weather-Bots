@@ -13,7 +13,8 @@ public class Program
     private const string ConfigFileName = "Configs.json";
     static async Task Main(string[] args)
     {
-        var config = await ConfigRetrieverJson.GetConfigFromJson(ConfigFileName);
+        var fileStream = new FileStreamWrapper().GetAsyncStream(ConfigFileName);
+        var config = await ConfigRetrieverJson.GetConfigFromJson(fileStream);
 
         var weatherDataPublisher = new Publisher<WeatherData>();
 

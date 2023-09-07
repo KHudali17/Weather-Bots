@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WeatherBots.DataRecords;
+﻿using WeatherBots.DataRecords;
 
-namespace WeatherBots.DataAccess
+namespace WeatherBots.DataAccess;
+
+public interface IWeatherDataRetriever
 {
-    public interface IWeatherDataRetriever
-    {
-        Task<WeatherData> GetWeatherData();
-    }
+    Task<WeatherData> GetWeatherData();
 }

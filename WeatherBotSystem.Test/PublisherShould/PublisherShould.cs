@@ -26,7 +26,7 @@ public class PublisherShould
         //Assert
         result.Should().BeTrue();
 
-        var observersPrivateField = getObserversField(_sut);
+        var observersPrivateField = GetObserversField(_sut);
         observersPrivateField
             .First().Should().Be(_mockObserver.Object);
     }
@@ -43,7 +43,7 @@ public class PublisherShould
         //Assert
         result.Should().BeTrue();
 
-        var observersPrivateField = getObserversField(_sut);
+        var observersPrivateField = GetObserversField(_sut);
         observersPrivateField.Should().BeEmpty();
     }
 
@@ -70,7 +70,7 @@ public class PublisherShould
         capturedData.Should().Be(data);
     }
 
-    private List<IPublisherObserver<int>> getObserversField(Publisher<int> publisher)
+    private List<IPublisherObserver<int>> GetObserversField(Publisher<int> publisher)
     {
         var fieldInfo = publisher
             .GetType()

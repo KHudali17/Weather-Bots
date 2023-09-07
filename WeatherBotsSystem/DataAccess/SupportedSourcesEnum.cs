@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace WeatherBots.DataAccess;
 
-namespace WeatherBots.DataAccess
+public enum SupportedSourcesEnum
 {
-    public enum SupportedSourcesEnum
-    {
-        JSON,
-        XML
-    }
+    JSON,
+    XML
 }

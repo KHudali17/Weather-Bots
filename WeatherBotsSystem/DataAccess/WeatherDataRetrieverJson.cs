@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using WeatherBots.DataRecords;
+﻿using WeatherBots.DataRecords;
+using WeatherBots.Seams;
 
-namespace WeatherBots.DataAccess
+namespace WeatherBots.DataAccess;
+
+public class WeatherDataRetrieverJson : IWeatherDataRetriever
 {
-    public class WeatherDataRetrieverJson : IWeatherDataRetriever
+    private readonly string _source;
+    private readonly IFileStreamWrapper _fileStreamWrapper;
+
+    public WeatherDataRetrieverJson(string source, IFileStreamWrapper fileStreamWrapper)
     {
-        private readonly string _source;
+        _source = source;
+        _fileStreamWrapper = fileStreamWrapper;
+    }
 
-        public WeatherDataRetrieverJson(string source)
-        {
-            _source = source;
-        }
-
-        public async Task<WeatherData> GetWeatherData()
-        {
-            var weatherDataDeserialized = await JsonFileReader.ReadJsonFileAsync<WeatherData>(_source);
-            return weatherDataDeserialized;
-        }
+    public async Task<WeatherData> GetWeatherData()
+    {
+        var weatherDataDeserialized = await JsonFileReader.ReadJsonFileAsync<WeatherData>(
+            _fileStreamWrapper.GetAsyncStream(_source));
+        return weatherDataDeserialized;
     }
 }

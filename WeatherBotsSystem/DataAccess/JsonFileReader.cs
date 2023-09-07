@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
-namespace WeatherBots.DataAccess
+
+namespace WeatherBots.DataAccess;
+
+public static class JsonFileReader
 {
-    internal static class JsonFileReader
+    public static async Task<T> ReadJsonFileAsync<T>(Stream stream)
     {
-        internal static async Task<T> ReadJsonFileAsync<T>(string fileName)
+        var options = new JsonSerializerOptions
         {
-            using FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, 
-                                                     FileShare.Read, bufferSize: 4096, useAsync: true);
+            PropertyNameCaseInsensitive = true
+        };
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
-
-            return ( await JsonSerializer.DeserializeAsync<T>(stream, options) )!;
-        }
+        return (await JsonSerializer.DeserializeAsync<T>(stream, options))!;
     }
 }
